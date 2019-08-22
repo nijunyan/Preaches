@@ -134,10 +134,16 @@ def openSeries(urlList):
         title = series[0]
         urlSeries = series[1]
         if content.find(title) != -1:
-            continue
+            pass
         url = 'https://www.fuyin.tv' + urlSeries
-        seriesPairs = openOneSeries(url)
-
+        try:
+            seriesPairs = openOneSeries(url)
+        except:
+            file = open('PreachesListDone.txt', 'a+', encoding='utf-8')
+            file.write(series[0] + ' failed\n')
+            file.write(url + '\n')
+            file.close()
+            continue
         startSeries(title, seriesPairs)
 
 def openOneSeries(url):
@@ -184,7 +190,7 @@ def main():
     urlList = genFileList(decoding = None, gen=False)
     # createDirs(urlList)
     openSeries(
-        # [['神的国近了', '/content/view/movid/2125/']]
+        # [['灵宫 祭司灵祭', '/content/view/movid/2072/']]
         urlList
     )
 
