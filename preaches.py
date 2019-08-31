@@ -69,7 +69,7 @@ def download(seriesPairs, root):
     try:
         wget.download(seriesPairs[0], out=file)
     except:
-        print(seriesPairs[1])
+        print(seriesPairs[1] + ' failed')
     # http://mp3.downs.cnfuyin.com/cdn/newmovall-mp3/06%25B8%25A3%25D2%25F4%25D6%25A4%25B5%25C0%252F%25C4%25C1%25CA%25A6%25BD%25B2%25B5%25C0%252Fl%25C1%25F5%25CD%25AE%252FMP4%252F%25C9%25F1%25B5%25C4%25B9%25FA%25BD%25FC%25C1%25CB%252F04%25D7%25DF%25B9%25FD%25C8%25A5%25B5%25C4%25B6%25F7%25B8%25E0.mp3
     print('done', seriesPairs[1], 'at:', ctime())
 
@@ -121,7 +121,19 @@ def startSeries(root, seriesPairs):
 
     os.chdir('..')
     file = open('PreachesListDone.txt', 'a+', encoding='utf-8')
-    file.write(root + '\n')
+
+    # make sure the useless downloading is excluded or process interrupted unexpectedly
+    tmp = noFile = ''
+    for i in filelist:
+        if os.path.isfile(i):
+            if 'tmp' in os.path.split(i)[1]:
+                tmp = 'exists tmp'
+
+    if len(filelist) == 0:
+        noFile = 'no files'
+    #comment end
+
+    file.write(root + tmp + noFile + '\n')
     file.close()
 
 def openSeries(urlList):
@@ -165,7 +177,8 @@ def openOneSeries(url):
     titles = rule.findall(body)
     seriesPair = []
     for i in range(len(mp3Links)):
-        titles[i] = titles[i].replace('\r','')
+        titles[i] = titles[i].replace('\r','')\
+            .replace('?','').replace('？','').replace('\t','')
         try:
             seriesPair.append([mp3Links[i], titles[i]])
         except:
@@ -190,7 +203,7 @@ def main():
     urlList = genFileList(decoding = None, gen=False)
     # createDirs(urlList)
     openSeries(
-        # [['灵宫 祭司灵祭', '/content/view/movid/2072/']]
+        # [['爱可以再更多一点点', '/content/view/movid/1746/']]
         urlList
     )
 
