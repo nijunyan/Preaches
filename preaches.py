@@ -137,26 +137,26 @@ def startSeries(root, seriesPairs):
     file.close()
 
 def openSeries(urlList):
-    file = open('PreachesListDone.txt', 'r', encoding='utf-8')
+    file = open('PreachesListDone.txt', 'a+', encoding='utf-8')
+    file.seek(0)
     content = file.readlines()
-    file.close()
     content = ''.join(content).strip('\n')
     print(content)
     for series in urlList:
         title = series[0]
         urlSeries = series[1]
         if content.find(title) != -1:
-            pass
+            file.write(series[0] + ' failed before\n')
+            continue
         url = 'https://www.fuyin.tv' + urlSeries
         try:
             seriesPairs = openOneSeries(url)
         except:
-            file = open('PreachesListDone.txt', 'a+', encoding='utf-8')
             file.write(series[0] + ' failed\n')
             file.write(url + '\n')
-            file.close()
             continue
         startSeries(title, seriesPairs)
+    file.close()
 
 def openOneSeries(url):
     decoding = 'gbk'
@@ -203,8 +203,8 @@ def main():
     urlList = genFileList(decoding = None, gen=False)
     # createDirs(urlList)
     openSeries(
-        # [['爱可以再更多一点点', '/content/view/movid/1746/']]
-        urlList
+        [['爱可以再更多一点点', '/content/view/movid/1746/']]
+        # urlList
     )
 
 main()
