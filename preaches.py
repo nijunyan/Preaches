@@ -132,7 +132,8 @@ def startSeries(root, seriesPairs):
     if len(filelist) == 0:
         noFile = 'no files'
     #comment end
-
+    if tmp != '' or noFile != '':
+        print (root + tmp + noFile)
     file.write(root + tmp + noFile + '\n')
     file.close()
 
@@ -141,11 +142,12 @@ def openSeries(urlList):
     file.seek(0)
     content = file.readlines()
     content = ''.join(content).strip('\n')
-    print(content)
+    # print(content)
     for series in urlList:
         title = series[0]
         urlSeries = series[1]
         if content.find(title) != -1:
+            print(series[0] + ' failed before')
             file.write(series[0] + ' failed before\n')
             continue
         url = 'https://www.fuyin.tv' + urlSeries
@@ -203,8 +205,8 @@ def main():
     urlList = genFileList(decoding = None, gen=False)
     # createDirs(urlList)
     openSeries(
-        [['爱可以再更多一点点', '/content/view/movid/1746/']]
-        # urlList
+        # [['爱可以再更多一点点', '/content/view/movid/1746/']]
+        urlList
     )
 
 main()
